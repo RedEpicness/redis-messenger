@@ -51,11 +51,11 @@
 
     <distributionManagement>
         <repository>
-            <id>highland</id>
+            <id>highland-releases</id>
             <url>http://158.69.253.48:8123/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
-            <id>highland</id>
+            <id>highland-snapshots</id>
             <url>http://158.69.253.48:8123/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
@@ -144,6 +144,7 @@
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
+                            <appendAssemblyId>false</appendAssemblyId>
                         </configuration>
                     </execution>
                 </executions>
