@@ -29,7 +29,7 @@ abstract class RedisListener : RedisPubSubListener<String, String> {
             if (channel == null || message == null)
                 TODO("Implement RedisMessage")
             val m = deserializeMsg(channel, message)
-            if (!m.isReply) messageRecieved(m)
+            if (!m.isReply) messageReceived(m)
         } catch (e: Exception) {
             RuntimeException("Exception was uncaught in messageReceived!", e).printStackTrace()
         }
@@ -46,6 +46,6 @@ abstract class RedisListener : RedisPubSubListener<String, String> {
 
     override fun punsubscribed(p0: String?, p1: Long) {}
 
-    abstract fun messageRecieved(msg: RedisMessage)
+    abstract fun messageReceived(msg: RedisMessage)
 
 }

@@ -80,7 +80,7 @@ class RedisMessenger(val id: String, uri: RedisURI) {
 
             }
 
-            override fun messageRecieved(msg: RedisMessage) {} //NOT NEEDED
+            override fun messageReceived(msg: RedisMessage) {} //NOT NEEDED
         })
     }
 
