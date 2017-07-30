@@ -44,7 +44,7 @@ class RedisMessenger(val id: String, uri: RedisURI) {
     private val scheduledReplies: HashMap<UUID, Consumer<RedisMessage?>>
 
     init {
-        if (localInstance == null) throw RuntimeException("Cannot have more than one instance of Redis messenger running!")
+        if (localInstance != null) throw RuntimeException("Cannot have more than one instance of Redis messenger running!")
         RedisMessenger.localInstance = this
         scheduledReplies = HashMap<UUID, Consumer<RedisMessage?>>()
         scheduler = Executors.newSingleThreadScheduledExecutor()
