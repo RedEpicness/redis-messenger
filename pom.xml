@@ -52,11 +52,11 @@
     <distributionManagement>
         <repository>
             <id>highland-releases</id>
-            <url>http://158.69.253.48:8123/repository/maven-releases/</url>
+            <url>http://highlandmc.net:8082/artifactory/highland-release/</url>
         </repository>
         <snapshotRepository>
             <id>highland-snapshots</id>
-            <url>http://158.69.253.48:8123/repository/maven-snapshots/</url>
+            <url>http://highlandmc.net:8082/artifactory/highland-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
