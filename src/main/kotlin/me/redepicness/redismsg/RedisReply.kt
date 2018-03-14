@@ -31,7 +31,7 @@ class RedisReply(private val message: RedisMessage, private val timeout: Duratio
         RedisMessenger.localInstance!!.scheduleReply(message.uuid, timeout, Consumer { m ->
             RedisMessenger.log("Success!")
             if (m == null)
-                callback.accept(Optional.empty<RedisMessage>())
+                callback.accept(Optional.empty())
             else
                 callback.accept(Optional.of(m))
         })
@@ -63,10 +63,7 @@ class RedisReply(private val message: RedisMessage, private val timeout: Duratio
         }
         val message = capsule.get()
         RedisMessenger.log("Value retrieved!")
-        if (message == null)
-            return Optional.empty<RedisMessage>()
-        else
-            return Optional.of(message)
+        return if (message == null) Optional.empty() else Optional.of(message)
     }
 
     private fun publishMessage() {

@@ -46,14 +46,14 @@ class RedisMessenger(val id: String, uri: RedisURI) {
     init {
         if (localInstance == null) throw RuntimeException("Cannot have more than one instance of Redis messenger running!")
         RedisMessenger.localInstance = this
-        scheduledReplies = HashMap<UUID, Consumer<RedisMessage?>>()
+        scheduledReplies = HashMap()
         scheduler = Executors.newSingleThreadScheduledExecutor()
         listenerConnection = RedisClient.create(uri).connectPubSub()
-        listenerConnection.sync().clientSetname(id + "-listener")
+        listenerConnection.sync().clientSetname("$id-listener")
         subscribe(id)
         pubSubConnection = RedisClient.create(uri).connectPubSub()
         pubSubCommands = pubSubConnection.sync()
-        pubSubCommands.clientSetname(id + "-commands")
+        pubSubCommands.clientSetname("$id-commands")
         pubSubAsyncCommands = pubSubConnection.async()
         addListeners(object : RedisListener() {
             override fun message(channel: String?, message: String?) {
@@ -193,7 +193,7 @@ class RedisMessenger(val id: String, uri: RedisURI) {
         } else {
             customScheduler!!.accept(task, timeout)
         }
-        scheduledReplies.put(uuid, callback)
+        scheduledReplies[uuid] = callback
     }
 
     companion object {

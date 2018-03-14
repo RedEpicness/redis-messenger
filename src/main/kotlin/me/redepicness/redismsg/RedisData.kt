@@ -37,85 +37,82 @@ class RedisData(val id: String = "Undefined") {
         for ((key, value) in data.entrySet()) {
             val type = Type.valueOf(value.asJsonObject.get("type").asString)
             val d = value.asJsonObject.get("data")
-            objects.put(
-                    key,
-                    when (type) {
-                        Type.DOUBLE -> RedisChunk(type, d.asDouble)
-                        Type.FLOAT -> RedisChunk(type, d.asFloat)
-                        Type.LONG -> RedisChunk(type, d.asLong)
-                        Type.INT -> RedisChunk(type, d.asInt)
-                        Type.SHORT -> RedisChunk(type, d.asShort)
-                        Type.BYTE -> RedisChunk(type, d.asByte)
-                        Type.STRING -> RedisChunk(type, d.asString)
-                        Type.CHAR -> RedisChunk(type, d.asCharacter)
-                        Type.BOOLEAN -> RedisChunk(type, d.asBoolean)
-                        Type.OBJECT -> {
-                            val array = d.asJsonArray
-                            val bytes = ByteArray(array.size())
-                            for (i in bytes.indices) {
-                                bytes[i] = array.get(i).asByte
-                            }
-                            val bis = ByteArrayInputStream(bytes)
-                            var input: ObjectInput? = null
-                            try {
-                                input = ObjectInputStream(bis)
-                                val o = input.readObject()
-                                RedisChunk(type, o)
-                            } catch (e: Exception) {
-                                throw RuntimeException("Error while de-serializing data", e)
-                            } finally {
-                                try {
-                                    input?.close()
-                                    bis.close()
-                                } catch (ignored: IOException) {
-                                }
-                            }
+            objects[key] = when (type) {
+                Type.DOUBLE -> RedisChunk(type, d.asDouble)
+                Type.FLOAT -> RedisChunk(type, d.asFloat)
+                Type.LONG -> RedisChunk(type, d.asLong)
+                Type.INT -> RedisChunk(type, d.asInt)
+                Type.SHORT -> RedisChunk(type, d.asShort)
+                Type.BYTE -> RedisChunk(type, d.asByte)
+                Type.STRING -> RedisChunk(type, d.asString)
+                Type.CHAR -> RedisChunk(type, d.asCharacter)
+                Type.BOOLEAN -> RedisChunk(type, d.asBoolean)
+                Type.OBJECT -> {
+                    val array = d.asJsonArray
+                    val bytes = ByteArray(array.size())
+                    for (i in bytes.indices) {
+                        bytes[i] = array.get(i).asByte
+                    }
+                    val bis = ByteArrayInputStream(bytes)
+                    var input: ObjectInput? = null
+                    try {
+                        input = ObjectInputStream(bis)
+                        val o = input.readObject()
+                        RedisChunk(type, o)
+                    } catch (e: Exception) {
+                        throw RuntimeException("Error while de-serializing data", e)
+                    } finally {
+                        try {
+                            input?.close()
+                            bis.close()
+                        } catch (ignored: IOException) {
                         }
                     }
-            )
+                }
+            }
         }
     }
 
     private val objects: HashMap<String, RedisChunk> = HashMap()
 
     fun addObject(id: String, data: Serializable) {
-        objects.put(id, RedisChunk(Type.OBJECT, data))
+        objects[id] = RedisChunk(Type.OBJECT, data)
     }
 
     fun addDouble(id: String, data: Double) {
-        objects.put(id, RedisChunk(Type.DOUBLE, data))
+        objects[id] = RedisChunk(Type.DOUBLE, data)
     }
 
     fun addFloat(id: String, data: Float) {
-        objects.put(id, RedisChunk(Type.FLOAT, data))
+        objects[id] = RedisChunk(Type.FLOAT, data)
     }
 
     fun addLong(id: String, data: Long) {
-        objects.put(id, RedisChunk(Type.LONG, data))
+        objects[id] = RedisChunk(Type.LONG, data)
     }
 
     fun addInt(id: String, data: Int) {
-        objects.put(id, RedisChunk(Type.INT, data))
+        objects[id] = RedisChunk(Type.INT, data)
     }
 
     fun addShort(id: String, data: Short) {
-        objects.put(id, RedisChunk(Type.SHORT, data))
+        objects[id] = RedisChunk(Type.SHORT, data)
     }
 
     fun addByte(id: String, data: Byte) {
-        objects.put(id, RedisChunk(Type.BYTE, data))
+        objects[id] = RedisChunk(Type.BYTE, data)
     }
 
     fun addString(id: String, data: String) {
-        objects.put(id, RedisChunk(Type.STRING, data))
+        objects[id] = RedisChunk(Type.STRING, data)
     }
 
     fun addChar(id: String, data: Char) {
-        objects.put(id, RedisChunk(Type.CHAR, data))
+        objects[id] = RedisChunk(Type.CHAR, data)
     }
 
     fun addBoolean(id: String, data: Boolean) {
-        objects.put(id, RedisChunk(Type.BOOLEAN, data))
+        objects[id] = RedisChunk(Type.BOOLEAN, data)
     }
 
     fun <T> getData(id: String) = objects[id]?.data as? T ?: throw IAE("Field $id does not exist!")
