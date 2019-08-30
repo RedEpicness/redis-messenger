@@ -38,8 +38,8 @@ class RedisDataTest {
         val d: Int = rand.nextInt()
         val e: Short = rand.nextInt(Short.MAX_VALUE.toInt()).toShort()
         val f: Byte = rand.nextInt(Byte.MAX_VALUE.toInt()).toByte()
-        val g: String = "This is a test string"
-        val h: Char = '?'
+        val g = "This is a test string"
+        val h = '?'
         val i: Boolean = rand.nextBoolean()
         val j: Duration = Duration.ofSeconds(rand.nextLong())
 
@@ -58,33 +58,33 @@ class RedisDataTest {
         data.addBoolean("i", i)
         data.addObject("j", j)
 
-        val a_: Double = data.getData("a")
-        val b_: Float = data.getData("b")
-        val c_: Long = data.getData("c")
-        val d_: Int = data.getData("d")
-        val e_: Short = data.getData("e")
-        val f_: Byte = data.getData("f")
-        val g_: String = data.getData("g")
-        val h_: Char = data.getData("h")
-        val i_: Boolean = data.getData("i")
-        val j_: Duration = data.getData("j")
+        val a1: Double = data.getData("a")
+        val b1: Float = data.getData("b")
+        val c1: Long = data.getData("c")
+        val d1: Int = data.getData("d")
+        val e1: Short = data.getData("e")
+        val f1: Byte = data.getData("f")
+        val g1: String = data.getData("g")
+        val h1: Char = data.getData("h")
+        val i1: Boolean = data.getData("i")
+        val j1: Duration = data.getData("j")
 
-        val id_ = data.id
+        val id1 = data.id
 
-        assert(id == id_)
+        assert(id == id1)
 
-        assert(a == a_)
-        assert(b == b_)
-        assert(c == c_)
-        assert(d == d_)
-        assert(e == e_)
-        assert(f == f_)
-        assert(g == g_)
-        assert(h == h_)
-        assert(i == i_)
-        assert(j == j_)
+        assert(a == a1)
+        assert(b == b1)
+        assert(c == c1)
+        assert(d == d1)
+        assert(e == e1)
+        assert(f == f1)
+        assert(g == g1)
+        assert(h == h1)
+        assert(i == i1)
+        assert(j == j1)
 
-        assert(j === j_)
+        assert(j === j1)
     }
 
     @Test
@@ -97,8 +97,8 @@ class RedisDataTest {
         val d: Int = rand.nextInt()
         val e: Short = rand.nextInt(Short.MAX_VALUE.toInt()).toShort()
         val f: Byte = rand.nextInt(Byte.MAX_VALUE.toInt()).toByte()
-        val g: String = "This is a test string"
-        val h: Char = '?'
+        val g = "This is a test string"
+        val h = '?'
         val i: Boolean = rand.nextBoolean()
         val j: Duration = Duration.ofSeconds(rand.nextLong())
 
@@ -117,33 +117,33 @@ class RedisDataTest {
         data.addBoolean("i", i)
         data.addObject("j", j)
 
-        val data_ = deserializeData(data.serialize())
+        val data1 = deserializeData(data.serialize())
 
-        val a_: Double = data_.getData("a")
-        val b_: Float = data_.getData("b")
-        val c_: Long = data_.getData("c")
-        val d_: Int = data_.getData("d")
-        val e_: Short = data_.getData("e")
-        val f_: Byte = data_.getData("f")
-        val g_: String = data_.getData("g")
-        val h_: Char = data_.getData("h")
-        val i_: Boolean = data_.getData("i")
-        val j_: Duration = data_.getData("j")
+        val a1: Double = data1.getData("a")
+        val b1: Float = data1.getData("b")
+        val c1: Long = data1.getData("c")
+        val d1: Int = data1.getData("d")
+        val e1: Short = data1.getData("e")
+        val f1: Byte = data1.getData("f")
+        val g1: String = data1.getData("g")
+        val h1: Char = data1.getData("h")
+        val i1: Boolean = data1.getData("i")
+        val j1: Duration = data1.getData("j")
 
-        val id_ = data_.id
+        val id1 = data1.id
 
-        assert(id == id_)
+        assert(id == id1)
 
-        assert(a == a_)
-        assert(b == b_)
-        assert(c == c_)
-        assert(d == d_)
-        assert(e == e_)
-        assert(f == f_)
-        assert(g == g_)
-        assert(h == h_)
-        assert(i == i_)
-        assert(j == j_)
+        assert(a == a1)
+        assert(b == b1)
+        assert(c == c1)
+        assert(d == d1)
+        assert(e == e1)
+        assert(f == f1)
+        assert(g == g1)
+        assert(h == h1)
+        assert(i == i1)
+        assert(j == j1)
     }
 
 }

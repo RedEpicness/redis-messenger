@@ -22,10 +22,27 @@ import java.util.concurrent.locks.ReentrantLock
 import java.util.function.Consumer
 
 /**
+ * This class represents a reply to a message.
+ *
+ * You can request a reply asynchronously using [callback], or synchronously using [get].
+ *
+ * @since 1.0
  * @author Red_Epicness
  */
 class RedisReply(private val message: RedisMessage, private val timeout: Duration, private val async: Boolean) {
 
+    /**
+     * This method allows asynchronous retrieval of a reply message using a callback.
+     *
+     * Once the message is received by the messenger, [callback] is executed with the optional message as the argument.
+     * If the retrieval times-out, an [Optional.empty] is returned.
+     *
+     * @param callback The Consumer to run after the reply is received.
+     *
+     * @return The optional [RedisMessage].
+     *
+     * @since 1.0
+     */
     fun callback(callback: Consumer<Optional<RedisMessage>>) {
         RedisMessenger.log("Get value with callback!")
         RedisMessenger.localInstance!!.scheduleReply(message.uuid, timeout, Consumer { m ->
@@ -38,6 +55,16 @@ class RedisReply(private val message: RedisMessage, private val timeout: Duratio
         publishMessage()
     }
 
+    /**
+     * This method allows synchronous retrieval of a reply message.
+     *
+     * This method blocks until the message is received, or the retrieval times-out.
+     * If the retrieval times-out, an [Optional.empty] is returned.
+     *
+     * @return The optional [RedisMessage].
+     *
+     * @since 1.0
+     */
     fun get(): Optional<RedisMessage> {
         RedisMessenger.log("Get value with blocking!")
         val lock = ReentrantLock()

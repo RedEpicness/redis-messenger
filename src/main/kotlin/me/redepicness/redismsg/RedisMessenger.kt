@@ -30,9 +30,19 @@ import java.util.function.BiConsumer
 import java.util.function.Consumer
 
 /**
+ * This class is the main class of the messenger. Use it to send messages, subscribe to channels and ad listeners.
+ * There is always only one instance of this class in a given runtime.
+ *
+ * @sample RedisMessenger
+ *
+ * @constructor Creates a new messenger instance, if it has not yet been created.
+ *
+ * @param id The id of the messenger when communicating with other instances.
+ * @param uri The [RedisURI] with the database connection information.
+ *
+ * @since 1.0
  * @author Red_Epicness
  */
-
 class RedisMessenger(val id: String, uri: RedisURI) {
 
     internal var pubSubCommands: RedisPubSubCommands<String, String>
@@ -44,8 +54,9 @@ class RedisMessenger(val id: String, uri: RedisURI) {
     private val scheduledReplies: HashMap<UUID, Consumer<RedisMessage?>>
 
     init {
-        if (localInstance == null) throw RuntimeException("Cannot have more than one instance of Redis messenger running!")
-        RedisMessenger.localInstance = this
+        println("Initializing messenger with id $id.")
+        if (localInstance != null) throw RuntimeException("Cannot have more than one instance of Redis messenger running!")
+        localInstance = this
         scheduledReplies = HashMap()
         scheduler = Executors.newSingleThreadScheduledExecutor()
         listenerConnection = RedisClient.create(uri).connectPubSub()
@@ -84,12 +95,24 @@ class RedisMessenger(val id: String, uri: RedisURI) {
         })
     }
 
+    /**
+     * Disables the messenger by closing all connections. Only call this when you will no longer need the messenger in this runtime, e.g. shutting down. This will disable this instance, but new ones will still be unable to be created.
+     *
+     * @since 1.0
+     */
     fun disable() {
         listenerConnection.close()
         pubSubConnection.flushCommands()
         pubSubConnection.close()
     }
 
+    /**
+     * Register one or more [RedisListener]s to listen for incoming messages on subscribed channels.
+     *
+     * @param listeners The [RedisListener]s to register
+     *
+     * @since 1.0
+     */
     fun addListeners(vararg listeners: RedisListener): RedisMessenger {
         if (!listenerConnection.isOpen) throw RuntimeException("The connection is not open!")
         for (listener in listeners) {
@@ -98,6 +121,13 @@ class RedisMessenger(val id: String, uri: RedisURI) {
         return this
     }
 
+    /**
+     * Disable one or more [RedisListener]s from listening to incoming messages.
+     *
+     * @param listeners The [RedisListener]s to disable
+     *
+     * @since 1.0
+     */
     fun removeListeners(vararg listeners: RedisListener): RedisMessenger {
         if (!listenerConnection.isOpen) throw RuntimeException("The connection is not open!")
         for (listener in listeners) {
@@ -106,24 +136,52 @@ class RedisMessenger(val id: String, uri: RedisURI) {
         return this
     }
 
+    /**
+     * Subscribe the messenger to listen for messages on channel [channel].
+     *
+     * @param channel The channel to subscribe to.
+     *
+     * @since 1.0
+     */
     fun subscribe(channel: String): RedisMessenger {
         if (!listenerConnection.isOpen) throw RuntimeException("The connection is not open!")
         listenerConnection.sync().subscribe(channel)
         return this
     }
 
+    /**
+     * Unsubscribe the messenger to stop listening for messages on channel [channel].
+     *
+     * @param channel The channel to unsubscribe from.
+     *
+     * @since 1.0
+     */
     fun unsubscribe(channel: String): RedisMessenger {
         if (!listenerConnection.isOpen) throw RuntimeException("The connection is not open!")
         listenerConnection.sync().unsubscribe(channel)
         return this
     }
 
+    /**
+     * Subscribe the messenger to listen for messages on channel [channel] asynchronously.
+     *
+     * @param channel The channel to subscribe to.
+     *
+     * @since 1.0
+     */
     fun subscribeAsync(channel: String): RedisMessenger {
         if (!listenerConnection.isOpen) throw RuntimeException("The connection is not open!")
         listenerConnection.async().subscribe(channel)
         return this
     }
 
+    /**
+     * Unsubscribe the messenger to stop listening for messages on channel [channel] asynchronously.
+     *
+     * @param channel The channel to unsubscribe from.
+     *
+     * @since 1.0
+     */
     fun unsubscribeAsync(channel: String): RedisMessenger {
         if (!listenerConnection.isOpen) throw RuntimeException("The connection is not open!")
         listenerConnection.async().unsubscribe(channel)
@@ -150,7 +208,7 @@ class RedisMessenger(val id: String, uri: RedisURI) {
         val message = RedisMessage(id, channel, data)
         log("Sending new message with reply sync:")
         val redisReply = RedisReply(message, timeout, false)
-        log("Reply: " + redisReply.toString())
+        log("Reply: $redisReply")
         return redisReply
     }
 
@@ -158,7 +216,7 @@ class RedisMessenger(val id: String, uri: RedisURI) {
         val message = RedisMessage(id, channel, data)
         log("Sending new message with reply async:")
         val redisReply = RedisReply(message, timeout, true)
-        log("Reply: " + redisReply.toString())
+        log("Reply: $redisReply")
         return redisReply
     }
 

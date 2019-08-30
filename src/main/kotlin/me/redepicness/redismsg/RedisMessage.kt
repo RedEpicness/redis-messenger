@@ -98,7 +98,7 @@ class RedisMessage(val sender: String, val channel: String, val data: RedisData)
     }
 
     override fun hashCode(): Int {
-        return Arrays.hashCode(arrayOf(sender, channel, data, timeSent, uuid, timeReceived, isReply, replyUUID))
+        return arrayOf(sender, channel, data, timeSent, uuid, timeReceived, isReply, replyUUID).contentHashCode()
     }
 
 }

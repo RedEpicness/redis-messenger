@@ -39,8 +39,8 @@ class RedisMessageTest {
         val d: Int = rand.nextInt()
         val e: Short = rand.nextInt(Short.MAX_VALUE.toInt()).toShort()
         val f: Byte = rand.nextInt(Byte.MAX_VALUE.toInt()).toByte()
-        val g: String = "This is a test string"
-        val h: Char = '?'
+        val g = "This is a test string"
+        val h = '?'
         val i: Boolean = rand.nextBoolean()
         val j: Duration = Duration.ofSeconds(rand.nextLong())
 
@@ -61,14 +61,14 @@ class RedisMessageTest {
 
         val msg = RedisMessage("sender", "channel", data)
 
-        val msg_ = deserializeMsg(msg.channel, msg.serialize())
+        val msg1 = deserializeMsg(msg.channel, msg.serialize())
 
-        assert(msg.sender == msg_.sender)
-        assert(msg.channel == msg_.channel)
-        assert(msg.data == msg_.data)
-        assert(msg.timeSent == msg_.timeSent)
-        assert(msg.isReply == msg_.isReply)
-        assert(msg.uuid == msg_.uuid)
+        assert(msg.sender == msg1.sender)
+        assert(msg.channel == msg1.channel)
+        assert(msg.data == msg1.data)
+        assert(msg.timeSent == msg1.timeSent)
+        assert(msg.isReply == msg1.isReply)
+        assert(msg.uuid == msg1.uuid)
     }
 
 }

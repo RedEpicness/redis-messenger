@@ -115,6 +115,7 @@ class RedisData(val id: String = "Undefined") {
         objects[id] = RedisChunk(Type.BOOLEAN, data)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T> getData(id: String) = objects[id]?.data as? T ?: throw IAE("Field $id does not exist!")
 
     fun hasData(id: String) = objects.containsKey(id)
@@ -159,7 +160,7 @@ class RedisData(val id: String = "Undefined") {
 
     internal fun serialize(): JsonObject {
         val data = JsonObject()
-        objects.forEach { k, v -> data.add(k, serializeChunk(v)) }
+        objects.forEach { (k, v) -> data.add(k, serializeChunk(v)) }
         val obj = JsonObject()
         obj.add("id", JsonPrimitive(id))
         obj.add("data", data)
@@ -178,7 +179,7 @@ class RedisData(val id: String = "Undefined") {
     }
 
     override fun hashCode(): Int {
-        return Arrays.hashCode(arrayOf(id, objects))
+        return arrayOf(id, objects).contentHashCode()
     }
 
 }
